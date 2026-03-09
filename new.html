@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Creative Honors | Vote</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--text-light:#ffffff;
+--gold:#d4af37;
+--glass:rgba(255,255,255,0.08);
+--blur:blur(12px);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#050505;color:white;}
+
+nav{
+padding:25px 5%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+color:var(--gold);
+font-weight:600;
+}
+
+.nav-links{
+display:flex;
+gap:25px;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+font-size:13px;
+opacity:.8;
+}
+
+.page-header{
+text-align:center;
+padding:60px 20px 30px;
+}
+
+.page-header h1{
+font-family:'Playfair Display',serif;
+font-size:3rem;
+font-weight:400;
+}
+
+.search-container{
+display:flex;
+justify-content:center;
+margin-bottom:30px;
+}
+
+.search-bar{
+width:320px;
+padding:12px 16px;
+border-radius:30px;
+border:1px solid rgba(255,255,255,0.2);
+background:#0b0b0b;
+color:white;
+outline:none;
+}
+
+.categories{
+display:flex;
+justify-content:center;
+gap:12px;
+flex-wrap:wrap;
+padding:10px 20px 40px;
+}
+
+.category-btn{
+padding:8px 16px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.2);
+background:transparent;
+color:white;
+cursor:pointer;
+font-size:12px;
+}
+
+.category-btn.active{
+background:rgba(212,175,55,0.15);
+border-color:var(--gold);
+}
+
+.nominee-container{
+width:90%;
+max-width:1100px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:30px;
+padding-bottom:80px;
+}
+
+.nominee-card{
+background:transparent;
+backdrop-filter:none;
+border:none;
+border-radius:16px;
+padding:25px;
+text-align:center;
+transition:.4s;
+cursor:pointer;
+}
+
+.nominee-card:hover{
+transform:translateY(-6px);
+border-color:var(--gold);
+}
+
+/* Yellow circle removed */
+.nominee-img{
+width:90px;
+height:90px;
+border-radius:50%;
+margin:auto;
+margin-bottom:15px;
+overflow:hidden;
+}
+
+.nominee-img img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.nominee-name{
+font-weight:500;
+margin-bottom:5px;
+}
+
+.nominee-category{
+font-size:12px;
+opacity:.6;
+margin-bottom:15px;
+}
+
+.vote-btn{
+padding:10px 20px;
+border-radius:30px;
+border:1px solid rgba(255,255,255,0.2);
+background:transparent;
+color:white;
+cursor:pointer;
+}
+
+.vote-btn:hover{
+background:rgba(212,175,55,0.2);
+border-color:var(--gold);
+}
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:100;
+}
+
+.modal.active{
+display:flex;
+}
+
+.modal-box{
+background:#0b0b0b;
+border:1px solid rgba(255,255,255,0.1);
+border-radius:16px;
+padding:30px;
+max-width:400px;
+text-align:center;
+}
+
+.modal-box img{
+width:100px;
+height:100px;
+border-radius:50%;
+margin-bottom:15px;
+}
+
+.modal-buttons{
+display:flex;
+gap:10px;
+justify-content:center;
+margin-top:15px;
+}
+
+.modal-buttons button{
+padding:10px 18px;
+border-radius:25px;
+border:none;
+cursor:pointer;
+}
+
+.confirm{
+background:var(--gold);
+color:black;
+}
+
+.cancel{
+background:#222;
+color:white;
+}
+
+footer{
+background:#070707;
+border-top:1px solid rgba(255,255,255,0.1);
+padding:70px 8% 40px;
+}
+
+.footer-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:40px;
+margin-bottom:40px;
+}
+
+.footer-column h4{
+color:var(--gold);
+margin-bottom:15px;
+font-size:14px;
+}
+
+.footer-column p{
+font-size:13px;
+opacity:.7;
+line-height:1.6;
+}
+
+.footer-links a{
+display:block;
+font-size:13px;
+opacity:.7;
+text-decoration:none;
+margin-bottom:8px;
+color:white;
+}
+
+.newsletter input{
+width:100%;
+padding:10px;
+border-radius:6px;
+border:1px solid rgba(255,255,255,0.2);
+background:#0b0b0b;
+color:white;
+margin-bottom:10px;
+}
+
+.newsletter button{
+padding:10px;
+width:100%;
+border:none;
+background:var(--gold);
+color:black;
+border-radius:6px;
+cursor:pointer;
+}
+
+.footer-bottom{
+border-top:1px solid rgba(255,255,255,0.08);
+padding-top:20px;
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+font-size:12px;
+opacity:.6;
+}
+
+.socials{
+display:flex;
+gap:15px;
+}
+
+.socials img{
+height:26px;
+}
+
+@media (max-width:768px){
+
+.nominee-container{
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.nominee-card{
+padding:18px;
+}
+
+.nominee-img{
+width:70px;
+height:70px;
+}
+
+.nominee-name{
+font-size:14px;
+}
+
+.nominee-category{
+font-size:11px;
+}
+
+.vote-btn{
+padding:8px 14px;
+font-size:12px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="logo">Creative Honors</div>
+<div class="nav-links">
+<a href="index.html">Home</a>
+</div>
+</nav>
+
+<section class="page-header">
+<h1>Vote for Your Favorite Creator</h1>
+</section>
+
+<div class="search-container">
+<input type="text" class="search-bar" placeholder="Search nominees..." onkeyup="searchNominee(this.value)">
+</div>
+
+<div class="categories">
+<button class="category-btn active" onclick="filterCategory('all')">All</button>
+<button class="category-btn" onclick="filterCategory('lifestyle')">Lifestyle</button>
+<button class="category-btn" onclick="filterCategory('music')">Music</button>
+<button class="category-btn" onclick="filterCategory('beauty')">Beauty</button>
+<button class="category-btn" onclick="filterCategory('technology')">Technology</button>
+<button class="category-btn" onclick="filterCategory('art')">Art</button>
+</div>
+
+
+<section class="nominee-container">
+
+<div class="nominee-card" data-category="art" data-name="canvaswithrio" onclick="openProfile('canvaswithrio','Modern painting and visuals','images/rio.png')">
+<div class="nominee-img"><img src="images/rio.png"></div>
+<div class="nominee-name">canvaswithrio</div>
+<div class="nominee-category">Modern painting and visuals</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="art" data-name="urbanartskenya" onclick="openProfile('urbanartskenya','Bold Art for Bold Spaces','images/UA.jpeg')">
+<div class="nominee-img"><img src="images/UA.jpeg"></div>
+<div class="nominee-name">urbanartskenya</div>
+<div class="nominee-category">Bold Art for Bold Spaces</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="technology" data-name="techworldkenya" onclick="openProfile('techworldkenya','Techworld Kenya','images/TW.jpeg')">
+<div class="nominee-img"><img src="images/TW.jpeg"></div>
+<div class="nominee-name">techworldkenya</div>
+<div class="nominee-category">Techworld Kenya 🇰🇪</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="beauty" data-name="glowwithnia" onclick="openProfile('glowwithnia','Natural skincare and glow products','images/nia.png')">
+<div class="nominee-img"><img src="images/nia.png"></div>
+<div class="nominee-name">glowwithnia</div>
+<div class="nominee-category">Natural skincare and glow products</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="technology" data-name="codm gaming" onclick="openProfile('CoD.M Gaming 254','Gaming','images/codm.jpeg')">
+<div class="nominee-img"><img src="images/codm.jpeg"></div>
+<div class="nominee-name">CoD.M Gaming 254🇰🇪</div>
+<div class="nominee-category">gamingkenya1</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="lifestyle" data-name="vanessa waswa" onclick="openProfile('vanessa waswa','Health sciences','images/ven.jpeg')">
+<div class="nominee-img"><img src="images/ven.jpeg"></div>
+<div class="nominee-name">vanessa waswa</div>
+<div class="nominee-category">Health sciences🥼</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="lifestyle" data-name="gatwirii" onclick="openProfile('gatwirii','Medical supplies CEO','images/gatwiri.jpeg')">
+<div class="nominee-img"><img src="images/gatwiri.jpeg"></div>
+<div class="nominee-name">gatwirii🌹</div>
+<div class="nominee-category">CEO at medisuites medical supplies limited</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="beauty" data-name="doticanailsparlour" onclick="openProfile('doticanailsparlour','Beauty Therapy','images/Dotica.jpeg')">
+<div class="nominee-img"><img src="images/Dotica.jpeg"></div>
+<div class="nominee-name">doticanailsparlour</div>
+<div class="nominee-category">Beauty Therapy, Nails & Scrubbing</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="beauty" data-name="chrome art kenya" onclick="openProfile('Chrome Art Kenya','Beauty Salon','images/chrome.jpeg')">
+<div class="nominee-img"><img src="images/chrome.jpeg"></div>
+<div class="nominee-name">Chrome Art Kenya 💅</div>
+<div class="nominee-category">💅 Nails | 💇 Dreads | 💆 Massage</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="beauty" data-name="glamnailsparlour" onclick="openProfile('glamnailsparlour','Beauty Salon','images/glam.jpeg')">
+<div class="nominee-img"><img src="images/glam.jpeg"></div>
+<div class="nominee-name">glamnailsparlour</div>
+<div class="nominee-category">glam nails &parlour Rng</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="beauty" data-name="amarinail_parlour" onclick="openProfile('amarinail_parlour','Nail Parlour','images/amari.jpeg')">
+<div class="nominee-img"><img src="images/amari.jpeg"></div>
+<div class="nominee-name">amarinail_parlour</div>
+<div class="nominee-category">@amarinailparlour</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="technology" data-name="glamnailsparlour" onclick="openProfile('Techlab kenya🇰🇪','@techlabkenya','images/tech lab.png')">
+<div class="nominee-img"><img src="images/tech lab.png"></div>
+<div class="nominee-name">Techlab kenya🇰🇪</div>
+<div class="nominee-category">@techlabkenya</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="beauty" data-name="life.with.ava" onclick="openProfile('life.with.ava','Travel diaries, coffee talks & real life moments','images/ava.png')">
+<div class="nominee-img"><img src="images/ava.png"></div>
+<div class="nominee-name">life.with.ava</div>
+<div class="nominee-category">Travel diaries, coffee talks & real life moments</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="lifestyle" data-name="simply.jordan" onclick="openProfile('simply.jordan','Minimal living','images/jordan.png')">
+<div class="nominee-img"><img src="images/jordan.png"></div>
+<div class="nominee-name">simply.jordan</div>
+<div class="nominee-category">Minimal living</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="lifestyle" data-name="thekaydiaries" onclick="openProfile('thekaydiaries','@thekaydiaries','images/kay.jpeg')">
+<div class="nominee-img"><img src="images/kay.png"></div>
+<div class="nominee-name">thekaydiaries</div>
+<div class="nominee-category">@thekaydiaries</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="lifestyle" data-name="maya_" onclick="openProfile('maya_','@morningswithmaya','images/maya.png')">
+<div class="nominee-img"><img src="images/maya.png"></div>
+<div class="nominee-name">maya_</div>
+<div class="nominee-category">@morningswithmaya</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="music" data-name="lyricluke" onclick="openProfile('lyricluke','rap & spoken word','images/lyric.png')">
+<div class="nominee-img"><img src="images/lyric.png"></div>
+<div class="nominee-name">lyricluke</div>
+<div class="nominee-category">rap and spoken word</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="music" data-name="soundsofzara" onclick="openProfile('soundsofzara','@itszara','images/zara.png')">
+<div class="nominee-img"><img src="images/zara.png"></div>
+<div class="nominee-name">soundsofzara</div>
+<div class="nominee-category">@itszara</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="technology" data-name="techwithamir" onclick="openProfile('techwithamir','Gadgets & Tech','images/amir.png')">
+<div class="nominee-img"><img src="images/amir.png"></div>
+<div class="nominee-name">techwithamir</div>
+<div class="nominee-category">Gadgets & Tech</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="technology" data-name="codedbylena" onclick="openProfile('codedbylena','weekly innovations','images/lena.png')">
+<div class="nominee-img"><img src="images/lena.png"></div>
+<div class="nominee-name">codedbylena</div>
+<div class="nominee-category">weekly innovations</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="technology" data-name="futurebyte" onclick="openProfile('futurebyte','AI, startups and digital innovation','images/byte.png')">
+<div class="nominee-img"><img src="images/byte.png"></div>
+<div class="nominee-name">futurebyte</div>
+<div class="nominee-category">AI, startups and digital innovation</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="music" data-name="5ive" onclick="openProfile('5ive','Music Producer','images/5ive.jpeg')">
+<div class="nominee-img"><img src="images/5ive.jpeg"></div>
+<div class="nominee-name">5ive🇰🇪</div>
+<div class="nominee-category">Music Producer | Engineer</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+
+<div class="nominee-card" data-category="beauty" data-name="makeupbytalia" onclick="openProfile('makeupbytalia','@makeupbytalia','images/talia.png')">
+<div class="nominee-img"><img src="images/talia.png"></div>
+<div class="nominee-name">makeupbytalia</div>
+<div class="nominee-category">@makeupbytalia</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="art" data-name="elias_elly" onclick="openProfile('elias_elly','@artbyelias','images/elly.png')">
+<div class="nominee-img"><img src="images/elly.png"></div>
+<div class="nominee-name">elias_elly</div>
+<div class="nominee-category">@artbyelias</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+
+<div class="nominee-card" data-category="art" data-name="artstitchkenya" onclick="openProfile('artstitchkenya','Embroidery design experts','images/AS.jpeg')">
+<div class="nominee-img"><img src="images/AS.jpeg"></div>
+<div class="nominee-name">artstitchkenya</div>
+<div class="nominee-category">Embroidery design experts</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+
+<div class="nominee-card" data-category="lifestyle" data-name="@itsnina" onclick="openProfile('@itsnina','Simple living, daily motivation','images/nina.png')">
+<div class="nominee-img"><img src="images/nina.png"></div>
+<div class="nominee-name">@itsnina</div>
+<div class="nominee-category">Simple living, daily motivation</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="music" data-name="melodymarcus" onclick="openProfile('melodymarcus','@melodymarcus','images/marcus.png')">
+<div class="nominee-img"><img src="images/marcus.png"></div>
+<div class="nominee-name">melodymarcus</div>
+<div class="nominee-category">@melodymarcus</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="beauty" data-name="its_amira" onclick="openProfile('its_amira','Makeup tutorials and skincare secrets','images/amira.png')">
+<div class="nominee-img"><img src="images/amira.png"></div>
+<div class="nominee-name">its_amira</div>
+<div class="nominee-category">Makeup tutorials and skincare secrets</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+<div class="nominee-card" data-category="art" data-name=".leo" onclick="openProfile('.leo','@sketchwithleo','images/leo.png')">
+<div class="nominee-img"><img src="images/leo.png"></div>
+<div class="nominee-name">.leo</div>
+<div class="nominee-category">@sketchwithleo</div>
+<button class="vote-btn">Vote</button>
+</div>
+
+
+</section>
+
+
+<div class="modal" id="profileModal">
+<div class="modal-box">
+<img id="profileImg">
+<h3 id="profileName"></h3>
+<p id="profileCategory"></p>
+
+<input type="number" id="voteCount" placeholder="Number of votes" min="1" 
+style="width:100%;padding:10px;margin-top:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:#111;color:white;">
+
+<div class="modal-buttons">
+<button class="confirm" onclick="confirmVote()">Vote</button>
+<button class="cancel" onclick="closeModal()">Close</button>
+</div>
+</div>
+</div>
+
+
+<div class="modal" id="confirmModal">
+<div class="modal-box">
+<h3>Vote Submitted</h3>
+<p>Your vote has been recorded successfully.</p>
+<div class="modal-buttons">
+<button class="confirm" onclick="closeModal()">Done</button>
+</div>
+</div>
+</div>
+
+<footer>
+<div class="footer-grid">
+
+<div class="footer-column">
+<h4>About Creative Honors</h4>
+<p>Creative Honors celebrates emerging creators across lifestyle, film, music, innovation and digital media.</p>
+</div>
+
+<div class="footer-column footer-links">
+<h4>Categories</h4>
+<a>Lifestyle</a>
+<a>Music</a>
+<a>Technology</a>
+<a>Beauty</a>
+<a>Art</a>
+</div>
+
+<div class="footer-column footer-links">
+<h4>FAQs</h4>
+<a>Nominees</a>
+<a>Past Winners</a>
+<a>Rules</a>
+<a>Contact</a>
+</div>
+
+<div class="footer-column newsletter">
+  <h4>Newsletter</h4>
+  <input type="email" id="newsletterEmail" placeholder="Your email">
+  <button onclick="subscribeNewsletter()">Subscribe</button>
+</div>
+
+</div>
+
+<div class="footer-bottom">
+<div>© 2026 Creative Honors</div>
+<div class="socials">
+<img src="images/forbes.png">
+<img src="images/linkedin.png">
+</div>
+</div>
+</footer>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<script>
+
+const PK='pk_live_59e390bccf17d967cdedfd51065b21c0371dead9'
+const PRICE_PER_VOTE_KOBO=2500
+
+let selectedNominee=null
+
+function filterCategory(category){
+
+// change active button highlight
+document.querySelectorAll(".category-btn").forEach(btn=>{
+btn.classList.remove("active")
+})
+
+event.target.classList.add("active")
+
+// filter nominees
+document.querySelectorAll(".nominee-card").forEach(card=>{
+card.style.display=(category==='all'||card.dataset.category===category)?'block':'none'
+})
+
+}
+
+function searchNominee(query){
+query=query.toLowerCase()
+document.querySelectorAll(".nominee-card").forEach(card=>{
+card.style.display=card.dataset.name.toLowerCase().includes(query)?'block':'none'
+})
+}
+
+function openProfile(name,category,img){
+    selectedNominee={name,category}
+    document.getElementById("profileName").innerText=name
+    document.getElementById("profileCategory").innerText=category
+    document.getElementById("profileImg").src=img
+    
+    // Add this line to clear the input or set it to blank so the placeholder shows
+    document.getElementById("voteCount").value = ""; 
+    
+    document.getElementById("profileModal").classList.add("active")
+}
+
+function closeModal(){
+document.querySelectorAll(".modal").forEach(m=>m.classList.remove("active"))
+}
+
+function randomEmail(){
+return `user${Math.floor(Math.random()*100000)}@creativehonors.com`
+}
+
+function confirmVote(){
+
+let votes=parseInt(document.getElementById("voteCount").value)
+
+if(!votes||votes<1){
+alert("Enter valid number of votes")
+return
+}
+
+let amount=PRICE_PER_VOTE_KOBO*votes
+
+const handler=PaystackPop.setup({
+
+key:PK,
+email:randomEmail(),
+amount:amount,
+currency:"KES",
+ref:'CHVOTE-'+Math.floor(Math.random()*1000000000),
+
+metadata:{
+custom_fields:[
+{display_name:"Nominee",value:selectedNominee.name},
+{display_name:"Votes",value:votes}
+]
+},
+
+callback:function(response){
+
+alert(`Payment successful. ${votes} vote(s) recorded.`)
+
+closeModal()
+
+document.getElementById("confirmModal").classList.add("active")
+
+},
+
+onClose:function(){
+alert('Payment cancelled.')
+}
+
+})
+
+handler.openIframe()
+
+}
+
+
+function subscribeNewsletter() {
+    const emailInput = document.getElementById("newsletterEmail").value;
+
+    if (!emailInput) {
+        alert("Please enter your email!");
+        return;
+    }
+
+    // Simple email format validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(emailInput)) {
+        alert("Please enter a valid email!");
+        return;
+    }
+
+    // Show success popup
+    alert(`Thank you! ${emailInput} has been subscribed to the newsletter.`);
+
+    // Clear the input
+    document.getElementById("newsletterEmail").value = "";
+}
+
+
+</script>
+
+</body>
+</html>
